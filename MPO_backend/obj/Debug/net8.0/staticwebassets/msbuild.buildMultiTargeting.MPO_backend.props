@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MPO_backend.props" />
+</Project>
