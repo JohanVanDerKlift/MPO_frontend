@@ -33,3 +33,20 @@ export interface SerialNumber {
     SerialNo: number;
     ProductionOrderID: string;
 }
+
+export interface UserProfileToken {
+    username: string;
+    email: string;
+    token: string;
+};
+
+export interface UserProfile {
+    username: string;
+    email: string;
+};
+
+export interface PagedResult<T> {
+    results: T[]
+    pageCount: number
+    totalCount: number
+}

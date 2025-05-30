@@ -4,6 +4,7 @@ using MPO_backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MPO_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250424112136_EditSerialNumber")]
+    partial class EditSerialNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,137 +24,6 @@ namespace MPO_backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("KOOMBA.CustomerRelations.Domain.KB_CRM", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Catalog1")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Catalog2")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Catalog3")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Catalog4")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Catalog5")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CommunicationHistory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CompanySize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContactEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContractInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("CreditLimit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FollowUp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Industry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoteSam")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OpeningHours")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("OutstandingBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("POS")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("POSType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentHistory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PriceList")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SalesChances")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopAddressCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopAddressCountry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopAddressZipCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ShopInShop")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("ShopInShopLength")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ShopPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShopValuation")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Turnover")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "AuthorId" }, "IX_CustomerRelations_AuthorId");
-
-                    b.HasIndex(new[] { "CustomerId" }, "IX_CustomerRelations_CustomerId");
-
-                    b.ToTable("KB_CRM");
-                });
 
             modelBuilder.Entity("MPO_backend.Models.AppUser", b =>
                 {
@@ -385,13 +257,13 @@ namespace MPO_backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0df9b004-91a5-4ec6-9163-5711345ba2a0",
+                            Id = "4b8f702b-4ac0-405b-aef7-1b4c492498c0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d2c3b26e-9c9a-4145-a3b5-8c1c1c7d667b",
+                            Id = "f5048166-5290-4c81-a955-224a31c8e8a2",
                             Name = "User",
                             NormalizedName = "USER"
                         });

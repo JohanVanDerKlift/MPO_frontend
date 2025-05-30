@@ -50,7 +50,6 @@ D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Composition
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Composition.TypedParts.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Drawing.Common.dll
-D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Formats.Asn1.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Memory.Data.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\System.Runtime.Caching.dll
@@ -153,3 +152,6 @@ D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\Swashbuckle.AspNet
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\Development\RiderProjects\MPO\mpo_backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\MPO_backend.sourcelink.json
+D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\PagedList.dll
+D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\PagedList.Mvc.dll

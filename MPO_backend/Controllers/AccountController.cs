@@ -27,7 +27,7 @@ public class AccountController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
 
         if (user == null) return Unauthorized("Invalid username!");
         
@@ -37,7 +37,7 @@ public class AccountController : ControllerBase
         return Ok(
             new NewUserDto
             {
-                UserName = user.UserName,
+                //UserName = user.UserName,
                 Email = user.Email,
                 Token = _tokenService.CreateToken(user)
             }
@@ -64,7 +64,6 @@ public class AccountController : ControllerBase
                     return Ok(
                         new NewUserDto
                         {
-                            UserName = user.UserName,
                             Email = user.Email,
                             Token = _tokenService.CreateToken(user)
                         }

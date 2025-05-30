@@ -1,9 +1,8 @@
 ﻿namespace MPO_backend.DTOs;
 
-public class SerialNumberDto
+public class CreateSerialNumberDto
 {
     public long ProductionNumber { get; set; }
     public long SerialNo { get; set; }
-    
-    public QualityTestDto QualityTest { get; set; }
+    public Guid ProductionOrderId { get; set; }
 }

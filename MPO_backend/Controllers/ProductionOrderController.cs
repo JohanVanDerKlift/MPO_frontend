@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPO_backend.Data;
@@ -21,10 +22,10 @@ public class ProductionOrderController : ControllerBase
     }
 
     [HttpGet]
-    // [Authorize]
+    [Authorize]
     public async Task<ActionResult<List<ProductionOrderDto>>> GetAllProductionOrderItems()
     {
-        var query = _context.ProductionOrders.OrderBy(o => o.DocNum)
+        var query = _context.ProductionOrders.OrderByDescending(o => o.StartDate)
             .Include(x => x.ProductionOrderItems)
             .Include(x => x.SerialNumbers)
             .AsQueryable();
@@ -60,6 +61,7 @@ public class ProductionOrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult<ProductionOrderDto>> GetProductionOrderById(Guid id)
     {
         var productionOrder = await _context.ProductionOrders
@@ -68,7 +70,29 @@ public class ProductionOrderController : ControllerBase
             .FirstOrDefaultAsync(x => x.Id == id);
         
         if (productionOrder == null) return NotFound();
-        return _mapper.Map<ProductionOrderDto>(productionOrder);
+
+        var mappedResult = new ProductionOrderDto()
+        {
+            Id = productionOrder.Id,
+            DocNum = productionOrder.DocNum,
+            ItemName = productionOrder.ProdItemName,
+            ItemCode = productionOrder.ProdItemCode,
+            Quantity = productionOrder.Quantity,
+            CardCode = productionOrder.CardCode,
+            CardName = productionOrder.CardName,
+            Instruction = productionOrder.Instruction,
+            InstructionFile = productionOrder.InstructionFile,
+            WhsName = productionOrder.WhsName,
+            ProductionText = productionOrder.ProductionText,
+            Comment = productionOrder.Comment,
+            TestInstruction = productionOrder.ProdTestInstruction,
+            Photo = productionOrder.Photo,
+            StartDate = productionOrder.StartDate,
+            SerialNumbers = _mapper.Map<List<SerialNumberDto>>(productionOrder.SerialNumbers),
+            ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(productionOrder.ProductionOrderItems)
+        };
+        
+        return mappedResult;
     }
 
     [HttpPost]
@@ -133,7 +157,6 @@ public class ProductionOrderController : ControllerBase
                     ProdItemName = productionOrderDto.ProdItemName,
                     Quantity = productionOrderDto.Quantity,
                     CardCode = productionOrderDto.CardCode,
-                    
                     CardName = productionOrderDto.CardName,
                     WhsName = productionOrderDto.WhsName,
                     Instruction = productionOrderDto.Instruction,
