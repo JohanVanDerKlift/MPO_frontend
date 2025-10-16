@@ -7,4 +7,5 @@ public class QualityTestDto
     public bool ElectricalTest { get; set; }
     public bool OperationalTest { get; set; }
     public bool TestResult { get; set; }
+    public int SerialNo { get; set; }
 }

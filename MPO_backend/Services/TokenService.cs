@@ -25,6 +25,7 @@ public class TokenService : ITokenService
         {
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
         };
         
         var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
@@ -32,14 +33,13 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddDays(1),
+            Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = creds,
             Issuer = _config["JWT:Issuer"],
             Audience = _config["JWT:Audience"]
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        
         var token = tokenHandler.CreateToken(tokenDescriptor);
         
         return tokenHandler.WriteToken(token);

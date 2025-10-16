@@ -18,7 +18,17 @@ public class ProductionOrder
     public bool Photo { get; set; }
     public string Logo { get; set; }
     public DateTime StartDate { get; set; }
+    public decimal? IWeight1 { get; set; }
+    public int? IWght1Unit { get; set; }
+    public decimal? SWeight1 { get; set; }
+    public int? SWght1Unit { get; set; }
+    public decimal? SLength1 { get; set; }
+    public int? SLen1Unit { get; set; }
+    public decimal? SWidth1 { get; set; }
+    public int? SWdth1Unit { get; set; }
+    public decimal? SHeight1 { get; set; }
+    public int? SHght1Unit { get; set; }
 
-    public List<SerialNumber> SerialNumbers { get; set; }
+    public List<QualityTest> QualityTests { get; set; }
     public List<ProductionOrderItem> ProductionOrderItems { get; set; }
 }

@@ -27,9 +27,8 @@ public class AccountController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
-
-        if (user == null) return Unauthorized("Invalid username!");
+        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        var roles = await _userManager.GetRolesAsync(user);
         
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
         if (!result.Succeeded) return Unauthorized("Username not found and/or invalid password!");
@@ -37,9 +36,9 @@ public class AccountController : ControllerBase
         return Ok(
             new NewUserDto
             {
-                //UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                Roles = roles.ToList()
             }
         );
     }
@@ -52,24 +51,36 @@ public class AccountController : ControllerBase
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var user = new AppUser
             {
-                UserName = registerDto.Username,
-                Email = registerDto.Email
+                Email = registerDto.Email,
+                UserName = registerDto.Email,
             };
+            
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
-                var roleResult = await _userManager.AddToRoleAsync(user, "User");
-                if (roleResult.Succeeded)
+                var roleErrors = new List<IdentityError>();
+                foreach (var role in registerDto.Role)
                 {
-                    return Ok(
-                        new NewUserDto
-                        {
-                            Email = user.Email,
-                            Token = _tokenService.CreateToken(user)
-                        }
-                    );
+                    var roleResult = await _userManager.AddToRoleAsync(user, role);
+                    if (!roleResult.Succeeded)
+                    {
+                        roleErrors.AddRange(roleResult.Errors);
+                    }
                 }
-                return StatusCode(500, roleResult.Errors); 
+                
+                if (roleErrors.Any())
+                {
+                    return StatusCode(500, roleErrors);
+                    
+                }
+                return Ok(
+                    new NewUserDto
+                    {
+                        Email = user.Email,
+                        Token = _tokenService.CreateToken(user),
+                        Roles = registerDto.Role
+                    }
+                );
             }
             return StatusCode(500, result.Errors);
         }

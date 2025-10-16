@@ -1,20 +1,13 @@
 import {create} from "zustand/react";
-
-type State = {
-    pageNumber: number
-    pageSize: number
-    pageCount: number
-}
-
-type Actions = {
-    setParams: (params: Partial<State>) => void
-    reset: () => void
-}
+import {State, Actions} from "../../types/Types";
 
 const initialState: State = {
     pageNumber: 1,
     pageSize: 25,
-    pageCount: 1
+    pageCount: 1,
+    searchTerm: '',
+    searchValue: '',
+    orderBy: 'docNum'
 }
 
 export const useParamsStore = create<State & Actions>()((set) => ({
@@ -31,4 +24,7 @@ export const useParamsStore = create<State & Actions>()((set) => ({
     },
     reset: () => set(initialState),
 
-}) )
+    setSearchValue: (value: string) => {
+        set({searchValue: value})
+    }
+}))

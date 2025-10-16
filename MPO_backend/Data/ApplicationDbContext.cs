@@ -33,8 +33,6 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     }
     
     public DbSet<ProductionOrder> ProductionOrders { get; set; }
-    public DbSet<SerialNumber> SerialNumbers { get; set; }
     public DbSet<ProductionOrderItem> ProductionOrderItems { get; set; }
     public DbSet<QualityTest> QualityTests { get; set; }
-    
 }

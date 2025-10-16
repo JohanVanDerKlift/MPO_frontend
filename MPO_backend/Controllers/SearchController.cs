@@ -26,11 +26,18 @@ public class SearchController : ControllerBase
     {
         var searchResult = _context.ProductionOrders
             .Include(x => x.ProductionOrderItems)
-            .Include(x => x.SerialNumbers)
+            //.Include(x => x.QualityTests)
             .OrderByDescending(x => x.StartDate)
-            .AsQueryable();;
-
-        //var skipNumber = (searchParams.PageNumber - 1) * searchParams.PageSize;
+            .AsQueryable();
+        
+        if (!string.IsNullOrEmpty(searchParams.SearchTerm))
+        {
+            searchResult = searchResult.Where(x => x.CardName ==  searchParams.SearchTerm ||
+                                    x.ProdItemCode.Contains(searchParams.SearchTerm) ||
+                                    x.ProdItemName.Contains(searchParams.SearchTerm) ||
+                                    x.DocNum.ToString().Contains(searchParams.SearchTerm));
+        }
+        
         var result = await searchResult.ToListAsync();
         var pagedResult = result.ToPagedList(searchParams.PageNumber, searchParams.PageSize);
         
@@ -54,7 +61,7 @@ public class SearchController : ControllerBase
                 TestInstruction = item.ProdTestInstruction,
                 Photo = item.Photo,
                 StartDate = item.StartDate,
-                SerialNumbers = _mapper.Map<List<SerialNumberDto>>(item.SerialNumbers),
+                //QualityTests = _mapper.Map<List<QualityTestDto>>(item.QualityTests),
                 ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(item.ProductionOrderItems)
             });
         }

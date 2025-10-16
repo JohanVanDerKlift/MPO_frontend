@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 type UserContextType = {
     user: UserProfile | null;
     token: string | null;
-    registerUser: (email: string, username: string, password: string) => void;
+    registerUser: (email: string, password: string, roles: string[]) => void;
     loginUser: (email: string, password: string) => void;
     logout: () => void;
     isLoggedIn: () => boolean;
@@ -37,16 +37,17 @@ export const AuthContextProvider = ({children}: Props)=> {
 
     const registerUser = async (
         email: string,
-        username: string,
-        password: string
+        password: string,
+        role: string[]
     ) => {
-        await registerAPI(email, username, password)
+        await registerAPI(email, password, role)
             .then((result) => {
                 if (result) {
                     localStorage.setItem("token", result?.data.token);
                     const userObj = {
                         username: result?.data.username,
-                        email: result?.data.email
+                        email: result?.data.email,
+                        roles: result?.data.roles.map((role) => role),
                     };
                     localStorage.setItem("user", JSON.stringify(userObj));
                     setUser(userObj!);
@@ -65,10 +66,12 @@ export const AuthContextProvider = ({children}: Props)=> {
         await loginAPI(email, password)
             .then((result) => {
                 if (result) {
+                    console.log(result);
                     localStorage.setItem("token", result?.data.token);
                     const userObj = {
                         username: result?.data.username,
-                        email: result?.data.email
+                        email: result?.data.email,
+                        roles: result?.data.roles.map((role) => role),
                     };
                     localStorage.setItem("user", JSON.stringify(userObj));
                     setUser(userObj!);

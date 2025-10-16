@@ -34,7 +34,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = 
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = 
     options.DefaultScheme = 
     options.DefaultForbidScheme = 
@@ -48,6 +48,7 @@ builder.Services.AddAuthentication(options =>
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Issuer"],
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"])    
@@ -55,6 +56,15 @@ builder.Services.AddAuthentication(options =>
         };
     }
 );
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Manager", policy => policy.RequireRole("Manager", "Admin"));
+    options.AddPolicy("Production", policy => policy.RequireRole("Manager", "Admin", "Production"));
+    options.AddPolicy("Testing", policy => policy.RequireRole("Manager", "Admin", "Testing"));
+    options.AddPolicy("Packing", policy => policy.RequireRole("Manager", "Admin", "Packing"));
+});
 
 builder.Services.AddControllers();
 

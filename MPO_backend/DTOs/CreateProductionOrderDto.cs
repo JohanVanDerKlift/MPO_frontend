@@ -14,7 +14,7 @@ public class CreateProductionOrderDto
     public string ProductionText { get; set; }
     public string Comment { get; set; }
     public string ProdTestInstruction { get; set; }
-    public bool Photo { get; set; }
+    public string Photo { get; set; }
     public string Logo { get; set; }
     public DateTime StartDate { get; set; }
     
@@ -23,4 +23,14 @@ public class CreateProductionOrderDto
     public string SuppCatNum { get; set; }
     public string Remark { get; set; }
     public string TestInstruction { get; set; }
+    public decimal? IWeight1 { get; set; }
+    public int? IWght1Unit { get; set; }
+    public decimal? SWeight1 { get; set; }
+    public int? SWght1Unit { get; set; }
+    public decimal? SLength1 { get; set; }
+    public int? SLen1Unit { get; set; }
+    public decimal? SWidth1 { get; set; }
+    public int? SWdth1Unit { get; set; }
+    public decimal? SHeight11 { get; set; }
+    public int? SHght1Unit { get; set; }
 }

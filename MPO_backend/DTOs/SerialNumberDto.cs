@@ -2,8 +2,6 @@
 
 public class SerialNumberDto
 {
-    public long ProductionNumber { get; set; }
-    public long SerialNo { get; set; }
-    
-    public QualityTestDto QualityTest { get; set; }
+    public int SerialNo { get; set; }
+    public int ProductionNumber { get; set; }
 }

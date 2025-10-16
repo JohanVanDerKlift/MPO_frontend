@@ -22,20 +22,18 @@ public class ProductionOrderController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
-    public async Task<ActionResult<List<ProductionOrderDto>>> GetAllProductionOrderItems()
+    //[Authorize]
+    public async Task<ActionResult<List<ProductionOrderListDto>>> GetAllProductionOrders()
     {
         var query = _context.ProductionOrders.OrderByDescending(o => o.StartDate)
-            .Include(x => x.ProductionOrderItems)
-            .Include(x => x.SerialNumbers)
             .AsQueryable();
         var result = await query.ToListAsync();
         
         // mapping
-        var mappedResult = new List<ProductionOrderDto>();
+        var mappedResult = new List<ProductionOrderListDto>();
         foreach (var item in result)
         {
-            mappedResult.Add(new ProductionOrderDto()
+            mappedResult.Add(new ProductionOrderListDto()
             {
                 Id = item.Id,
                 DocNum = item.DocNum,
@@ -44,16 +42,8 @@ public class ProductionOrderController : ControllerBase
                 Quantity = item.Quantity,
                 CardCode = item.CardCode,
                 CardName = item.CardName,
-                Instruction = item.Instruction,
-                InstructionFile = item.InstructionFile,
-                WhsName = item.WhsName,
                 ProductionText = item.ProductionText,
-                Comment = item.Comment,
-                TestInstruction = item.ProdTestInstruction,
-                Photo = item.Photo,
-                StartDate = item.StartDate,
-                SerialNumbers = _mapper.Map<List<SerialNumberDto>>(item.SerialNumbers),
-                ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(item.ProductionOrderItems)
+                StartDate = item.StartDate
             });
         }
 
@@ -61,12 +51,12 @@ public class ProductionOrderController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<ProductionOrderDto>> GetProductionOrderById(Guid id)
     {
         var productionOrder = await _context.ProductionOrders
             .Include(x => x.ProductionOrderItems)
-            .Include(x => x.SerialNumbers)
+            .Include(x => x.QualityTests)
             .FirstOrDefaultAsync(x => x.Id == id);
         
         if (productionOrder == null) return NotFound();
@@ -87,111 +77,155 @@ public class ProductionOrderController : ControllerBase
             Comment = productionOrder.Comment,
             TestInstruction = productionOrder.ProdTestInstruction,
             Photo = productionOrder.Photo,
+            Logo = productionOrder.Logo,
             StartDate = productionOrder.StartDate,
-            SerialNumbers = _mapper.Map<List<SerialNumberDto>>(productionOrder.SerialNumbers),
+            IWeight1 = productionOrder.IWeight1 ?? 0,
+            IWght1Unit = productionOrder.IWght1Unit ?? 0,
+            SWeight1 = productionOrder.SWeight1 ?? 0,
+            SWdth1Unit = productionOrder.SWdth1Unit ?? 0,
+            SLength1 = productionOrder.SLength1 ?? 0,
+            SLen1Unit = productionOrder.SLen1Unit ?? 0,
+            SWidth1 = productionOrder.SWidth1 ?? 0,
+            SWght1Unit = productionOrder.SWght1Unit ?? 0,
+            SHeight1 = productionOrder.SHeight1 ?? 0,
+            SHght1Unit = productionOrder.SHght1Unit ?? 0,
+            
+            QualityTests = _mapper.Map<List<QualityTestDto>>(productionOrder.QualityTests),
             ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(productionOrder.ProductionOrderItems)
         };
         
         return mappedResult;
     }
-
+    
     [HttpPost]
     public async Task<ActionResult> PostProductionOrder(List<CreateProductionOrderDto> productionOrderDtos)
     {
-        List<CreateProductionOrderDto> distinctProductionOrders = productionOrderDtos
-            .GroupBy(o => o.DocNum)
-            .Select(x => x.First())
-            .ToList();
-
-        foreach (var productionOrderDto in distinctProductionOrders)
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
         {
-            var result = false;
-            if (_context.ProductionOrders.Any(o => o.DocNum == productionOrderDto.DocNum))
-            {
-                // Update productionOrder
-                var productionOrder = await _context.ProductionOrders.FirstOrDefaultAsync(o => o.DocNum == productionOrderDto.DocNum);
-                productionOrder.DocNum = productionOrderDto.DocNum;
-                productionOrder.ProdItemCode = productionOrderDto.ProdItemCode;
-                productionOrder.ProdItemName = productionOrderDto.ProdItemName;
-                productionOrder.Quantity = productionOrderDto.Quantity;
-                productionOrder.CardCode = productionOrderDto.CardCode;
-                productionOrder.CardName = productionOrderDto.CardName;
-                productionOrder.WhsName = productionOrderDto.WhsName;
-                productionOrder.Instruction = productionOrderDto.Instruction;
-                productionOrder.InstructionFile = productionOrderDto.InstructionFile;
-                productionOrder.StartDate = productionOrderDto.StartDate;
-                productionOrder.ProductionText = productionOrderDto.ProductionText;
-                productionOrder.ProdTestInstruction = productionOrderDto.ProdTestInstruction;
-                productionOrder.Photo = productionOrderDto.Photo;
-                productionOrder.Logo = productionOrderDto.Logo;
-                
-                result = await _context.SaveChangesAsync() > 0;
-                if (!result) return BadRequest("Could not save ProductionOrder to the DB");
+            var distinctOrders = productionOrderDtos
+                .GroupBy(o => o.DocNum)
+                .Select(g => g.First())
+                .ToList();
 
-                await _context.ProductionOrderItems.Where(x => x.ProductionOrderId == productionOrder.Id).ExecuteDeleteAsync();
-                
-                var newProductionOrderItems = new List<ProductionOrderItem>();
-                var relevantProductionOrders = productionOrderDtos.Where(x => x.DocNum == productionOrder.DocNum);
-                foreach (var item in relevantProductionOrders)
-                {
-                    newProductionOrderItems.Add(new ProductionOrderItem()
-                    {
-                        ItemCode = item.ItemCode,
-                        SuppCatNum = item.SuppCatNum,
-                        ItemName = item.ItemName,
-                        Instruction = item.Instruction,
-                        Remark = item.Remark,
-                        ProductionOrderId = productionOrder.Id,
-                    });
-                }
-                _context.ProductionOrderItems.AddRange(newProductionOrderItems);
-                result = await _context.SaveChangesAsync() > 0;
-                if (!result) return BadRequest("Could not save ProductionOrderItems to the DB");
-            }
-            else
+            foreach (var dto in distinctOrders)
             {
-                var productionOrder = new ProductionOrder()
+                var productionOrder = await _context.ProductionOrders
+                    .FirstOrDefaultAsync(o => o.DocNum == dto.DocNum);
+
+                if (productionOrder != null)
                 {
-                    DocNum = productionOrderDto.DocNum,
-                    ProdItemCode = productionOrderDto.ProdItemCode,
-                    ProdItemName = productionOrderDto.ProdItemName,
-                    Quantity = productionOrderDto.Quantity,
-                    CardCode = productionOrderDto.CardCode,
-                    CardName = productionOrderDto.CardName,
-                    WhsName = productionOrderDto.WhsName,
-                    Instruction = productionOrderDto.Instruction,
-                    InstructionFile = productionOrderDto.InstructionFile,
-                    StartDate = productionOrderDto.StartDate,
-                    ProductionText = productionOrderDto.ProductionText,
-                    ProdTestInstruction = productionOrderDto.ProdTestInstruction,
-                    Photo = productionOrderDto.Photo,
-                    Logo = productionOrderDto.Logo
-                };
-                _context.ProductionOrders.Add(productionOrder);
-                result = await _context.SaveChangesAsync() > 0;
-                if (!result) return BadRequest("Could not save ProductionOrder to the DB");
-            
-                var productionOrderItems = new List<ProductionOrderItem>();
-                List<CreateProductionOrderDto> relevantProductionOrders =
-                    productionOrderDtos.Where(x => x.DocNum == productionOrderDto.DocNum).ToList();
-            
-                foreach (var item in relevantProductionOrders)
-                {
-                    productionOrderItems.Add(new ProductionOrderItem()
-                    {
-                        ItemCode = item.ItemCode,
-                        SuppCatNum = item.SuppCatNum,
-                        ItemName = item.ItemName,
-                        Instruction = item.Instruction,
-                        Remark = item.Remark,
-                        ProductionOrderId = productionOrder.Id,
-                    });
+                    // Update bestaande order
+                    productionOrder.ProdItemCode = dto.ProdItemCode;
+                    productionOrder.ProdItemName = dto.ProdItemName;
+                    productionOrder.Quantity = dto.Quantity;
+                    productionOrder.CardCode = dto.CardCode;
+                    productionOrder.CardName = dto.CardName;
+                    productionOrder.WhsName = dto.WhsName;
+                    productionOrder.Instruction = dto.Instruction;
+                    productionOrder.InstructionFile = dto.InstructionFile;
+                    productionOrder.StartDate = dto.StartDate;
+                    productionOrder.ProductionText = dto.ProductionText;
+                    productionOrder.ProdTestInstruction = dto.ProdTestInstruction;
+                    productionOrder.Photo = dto.Photo == "1";
+                    productionOrder.Logo = dto.Logo;
+                    productionOrder.IWeight1 = dto.IWeight1 ?? 0;
+                    productionOrder.IWght1Unit = dto.IWght1Unit ?? 0;
+                    productionOrder.SWeight1 = dto.SWeight1 ?? 0;
+                    productionOrder.SWght1Unit = dto.SWght1Unit ?? 0;
+                    productionOrder.SLength1 = dto.SLength1 ?? 0;
+                    productionOrder.SLen1Unit = dto.SLen1Unit ?? 0;
+                    productionOrder.SWidth1 = dto.SWidth1 ?? 0;
+                    productionOrder.SWdth1Unit = dto.SWdth1Unit ?? 0;
+                    productionOrder.SHeight1 = dto.SHeight11 ?? 0;
+                    productionOrder.SHght1Unit = dto.SHght1Unit ?? 0;
+
+                    await _context.ProductionOrderItems
+                        .Where(x => x.ProductionOrderId == productionOrder.Id)
+                        .ExecuteDeleteAsync();
                 }
-                _context.ProductionOrderItems.AddRange(productionOrderItems);
-                result = await _context.SaveChangesAsync() > 0;
-                if (!result) return BadRequest("Could not save ProductionOrderItems to the DB");
+                else
+                {
+                    // Nieuwe order toevoegen
+                    productionOrder = new ProductionOrder
+                    {
+                        DocNum = dto.DocNum,
+                        ProdItemCode = dto.ProdItemCode,
+                        ProdItemName = dto.ProdItemName,
+                        Quantity = dto.Quantity,
+                        CardCode = dto.CardCode,
+                        CardName = dto.CardName,
+                        WhsName = dto.WhsName,
+                        Instruction = dto.Instruction,
+                        InstructionFile = dto.InstructionFile,
+                        StartDate = dto.StartDate,
+                        ProductionText = dto.ProductionText,
+                        ProdTestInstruction = dto.ProdTestInstruction,
+                        Photo = dto.Photo == "1",
+                        Logo = dto.Logo,
+                        IWeight1 = dto.IWeight1 ?? 0,
+                        IWght1Unit = dto.IWght1Unit ?? 0,
+                        SWeight1 = dto.SWeight1 ?? 0,
+                        SWght1Unit = dto.SWght1Unit ?? 0,
+                        SLength1 = dto.SLength1 ?? 0,
+                        SLen1Unit = dto.SLen1Unit ?? 0,
+                        SWidth1 = dto.SWidth1 ?? 0,
+                        SWdth1Unit = dto.SWdth1Unit ?? 0,
+                        SHeight1 = dto.SHeight11 ?? 0,
+                        SHght1Unit = dto.SHght1Unit ?? 0,
+                    };
+
+                    _context.ProductionOrders.Add(productionOrder);
+                }
+
+                // Items toevoegen
+                var items = productionOrderDtos
+                    .Where(x => x.DocNum == dto.DocNum)
+                    .Select(x => new ProductionOrderItem
+                    {
+                        ItemCode = x.ItemCode,
+                        SuppCatNum = x.SuppCatNum,
+                        ItemName = x.ItemName,
+                        Instruction = x.Instruction,
+                        Remark = x.Remark,
+                        ProductionOrderId = productionOrder.Id
+                    })
+                    .ToList();
+
+                _context.ProductionOrderItems.AddRange(items);
             }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return Ok();
         }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return BadRequest($"Er is iets fout gegaan: {ex.Message}");
+        }
+    }
+
+    [HttpPost("{id:guid}")]
+    public async Task<IActionResult> PostMeasures(Guid id, PostMeasureDto dto)
+    {
+        var productionOrder = await _context.ProductionOrders.FindAsync(id);
+        if (productionOrder == null)
+        {
+            return NotFound();
+        }
+        
+        productionOrder.IWeight1 = dto.IWeight1;
+        productionOrder.IWght1Unit = dto.IWght1Unit;
+        productionOrder.SWeight1 = dto.SWeight1;
+        productionOrder.SWght1Unit = dto.SWght1Unit;
+        productionOrder.SLength1 = dto.SLength1;
+        productionOrder.SLen1Unit = dto.SLen1Unit;
+        productionOrder.SWidth1 = dto.SWidth1;
+        productionOrder.SWdth1Unit = dto.SWdth1Unit;
+        productionOrder.SHeight1 = dto.SHeight1;
+        productionOrder.SHght1Unit = dto.SHght1Unit;
+        await _context.SaveChangesAsync();
         return Ok();
     }
 }

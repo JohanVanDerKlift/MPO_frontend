@@ -8,7 +8,12 @@ public class QualityTest
     public bool ElectricalTest { get; set; }
     public bool OperationalTest { get; set; }
     public bool TestResult { get; set; }
+    public int SerialNo { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public string UserId { get; set; }
     
-    public SerialNumber SerialNumber { get; set; }
-    public Guid SerialNumberId { get; set; }
+    public ProductionOrder ProductionOrder { get; set; }
+    public Guid ProductionOrderId { get; set; }
+    
 }

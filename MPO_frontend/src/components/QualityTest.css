@@ -1,0 +1,4 @@
+.custom-checkbox:disabled + .checkbox-label {
+    opacity: 0.4; /* Lightly grayed out */
+    cursor: not-allowed; /* Optional: show a blocked cursor */
+}

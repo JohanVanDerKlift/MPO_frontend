@@ -131,12 +131,6 @@ D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\scopedcss\bundle\M
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets.build.json
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets.development.json
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets\msbuild.MPO_backend.Microsoft.AspNetCore.StaticWebAssets.props
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets\msbuild.MPO_backend.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets\msbuild.build.MPO_backend.props
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.MPO_backend.props
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.MPO_backend.props
-D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\staticwebassets.pack.json
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\MPO_back.59CE656F.Up2Date
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\MPO_backend.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\refint\MPO_backend.dll
@@ -155,3 +149,9 @@ D:\Development\RiderProjects\MPO\mpo_backend\bin\Debug\net8.0\Microsoft.AspNetCo
 D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\MPO_backend.sourcelink.json
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\PagedList.dll
 D:\Development\RiderProjects\MPO\MPO_Backend\bin\Debug\net8.0\PagedList.Mvc.dll
+D:\Development\RiderProjects\MPO\mpo_backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\Development\RiderProjects\MPO\mpo_backend\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\Development\RiderProjects\MPO\mpo_backend\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\Development\RiderProjects\MPO\mpo_backend\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\Development\RiderProjects\MPO\mpo_backend\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\Development\RiderProjects\MPO\MPO_Backend\obj\Debug\net8.0\swae.build.ex.cache

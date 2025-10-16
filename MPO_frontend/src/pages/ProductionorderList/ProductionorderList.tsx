@@ -6,17 +6,26 @@ import {Table} from "react-bootstrap";
 import {useParamsStore} from "../../hooks/useParamsStore";
 import {useShallow} from "zustand/react/shallow";
 import {PagedResult, ProductionOrder} from "../../../types/Types";
+import AppPagination from "../../components/AppPagination";
 
 function ProductionorderList() {
     const [data, setData] = useState<PagedResult<ProductionOrder>>();
     const params = useParamsStore(useShallow(state => ({
         pageNumber: state.pageNumber,
         pageSize: state.pageSize,
-        pageCount: state.pageCount
+        pageCount: state.pageCount,
+        searchTerm: state.searchTerm,
+        searchValue: state.searchValue,
+        orderBy: state.orderBy,
     })))
     const setParams = useParamsStore(state => state.setParams)
     const endpoint = 'search';
-    const query = `?PageNumber=${params.pageNumber}&PageSize=${params.pageSize}`;
+    let query = `?PageNumber=${params.pageNumber}&PageSize=${params.pageSize}`;
+    console.log("searchTerm=" + params.searchTerm);
+    console.log("searchValue=" + params.searchValue);
+    if (params.searchTerm !== null || params.searchTerm !== '') {
+        query += `&SearchTerm=${params.searchValue}`;
+    }
 
     function setPageNumber(pageNumber: number) {
         setParams({pageNumber})
@@ -27,7 +36,7 @@ function ProductionorderList() {
             setData(result);
             console.log(result);
         });
-    }, [query])
+    }, [query]);
 
     if (!data) return <div className="mnt-4">Loading...</div>;
 
@@ -52,7 +61,6 @@ function ProductionorderList() {
                                 <tr key={item.id}>
                                     <td>{item.docNum}</td>
                                     <td>{item.itemCode}</td>
-                                    <td>{item.itemCode}</td>
                                     <td>{item.itemName}</td>
                                     <td>{item.startDate.toString().split("T", 1)}</td>
                                     <td><Link to={`/productionorder/${item.id}/productie`} className="btn btn-primary">Productie</Link></td>
@@ -61,46 +69,11 @@ function ProductionorderList() {
                             ))}
                             </tbody>
                         </Table>
-                        <nav aria-label="Page navigation example">
-                            <ul className="pagination">
-                                {(params.pageNumber !== 1) &&
-                                    <>
-                                        <li className="page-item">
-                                            <button className="page-link" onClick={() => setPageNumber(params.pageNumber - 1)}>Previous</button>
-                                        </li>
-                                    </>
-                                }
-                                {!(params.pageNumber < data.pageCount - 1) &&
-                                    <>
-                                        <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber - 2)}>{params.pageNumber - 2}</button></li>
-                                        <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber - 1)}>{params.pageNumber - 1}</button></li>
-                                    </>
-                                }
-                                {((params.pageNumber < data.pageCount - 1) && (params.pageNumber > 1)) &&
-                                    <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber - 1)}>{params.pageNumber - 1}</button></li>
-                                }
-
-                                <li className="page-item active"><button className="page-link" onClick={() => setPageNumber(params.pageNumber)}>{params.pageNumber}</button></li>
-
-                                {(params.pageNumber === 1) &&
-                                    <>
-                                        <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber + 1)}>{params.pageNumber + 1}</button></li>
-                                        <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber + 2)}>{params.pageNumber + 2}</button></li>
-                                    </>
-                                }
-                                {((params.pageNumber < data.pageCount - 1) && (params.pageNumber > 1)) &&
-                                    <li className="page-item"><button className="page-link" onClick={() => setPageNumber(params.pageNumber + 1)}>{params.pageNumber + 1}</button></li>
-                                }
-
-                                {(params.pageNumber < data.pageCount - 1) &&
-                                    <>
-                                        <li className="page-item">
-                                            <button className="page-link" onClick={() => setPageNumber(params.pageNumber + 1)}>Next</button>
-                                        </li>
-                                    </>
-                                }
-                            </ul>
-                        </nav>
+                        <AppPagination
+                            pageNumber={params.pageNumber}
+                            pageCount={data.pageCount}
+                            setPageNumber={setPageNumber}
+                        />
                     </Container>
                 </>
             )}

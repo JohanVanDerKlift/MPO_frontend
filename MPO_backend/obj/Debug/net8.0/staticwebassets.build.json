@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "4AmhflclgAaYBBMw+OeK2SZVfLCCqW+I9smTEUrDW18=",
-  "Source": "MPO_backend",
-  "BasePath": "_content/MPO_backend",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"6UvIqCcox7LtgZVaQZlSxAuuzNalDXbvRfjHFtjT2l4=","Source":"MPO_backend","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

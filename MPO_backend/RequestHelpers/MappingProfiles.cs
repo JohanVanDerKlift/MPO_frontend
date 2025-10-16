@@ -10,11 +10,12 @@ public class MappingProfiles : Profile
     {
         CreateMap<ProductionOrder, ProductionOrderDto>()
             .IncludeMembers(x => x.ProductionOrderItems)
-            .IncludeMembers(x => x.SerialNumbers);
+            .IncludeMembers(x => x.QualityTests);
         CreateMap<List<ProductionOrderItem>, ProductionOrderDto>();
-        CreateMap<List<SerialNumber>, ProductionOrderDto>();
+        CreateMap<List<QualityTest>, ProductionOrderDto>();
 
-        CreateMap<SerialNumber, SerialNumberDto>();
         CreateMap<ProductionOrderItem, ProductionOrderItemDto>();
+        CreateMap<QualityTest, QualityTestDto>();
+        CreateMap<PostQualityTestDto, QualityTest>();
     }
 }
