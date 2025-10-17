@@ -31,4 +31,5 @@ public class ProductionOrder
 
     public List<QualityTest> QualityTests { get; set; }
     public List<ProductionOrderItem> ProductionOrderItems { get; set; }
+    public Status Status { get; set; } = Status.Ingepland;
 }
