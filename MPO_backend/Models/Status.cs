@@ -2,10 +2,10 @@
 
 public enum Status
 {
-    Ingepland,
-    Productie,
-    Testen,
-    Verzenden,
-    Compleet,
-    Afgehandeld
+    Ingepland = 0,
+    Productie = 1,
+    Testen = 2,
+    Verzenden = 3,
+    Compleet = 4,
+    Afgehandeld = 5
 }

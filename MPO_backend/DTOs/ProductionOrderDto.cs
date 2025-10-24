@@ -30,6 +30,8 @@ public class ProductionOrderDto
     public int SWdth1Unit { get; set; }
     public decimal SHeight1 { get; set; }
     public int SHght1Unit { get; set; }
+    public bool IsVariableProduct { get; set; }
+    public Status Status { get; set; }
 
     public List<QualityTestDto> QualityTests { get; set; }
     public List<ProductionOrderItemDto> ProductionOrderItems { get; set; }

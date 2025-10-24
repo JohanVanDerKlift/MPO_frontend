@@ -13,4 +13,5 @@ public class ProductionOrderListDto
     public string CardName { get; set; }
     public string ProductionText { get; set; }
     public DateTime StartDate { get; set; }
+    public Status Status { get; set; }
 }

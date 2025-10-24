@@ -32,3 +32,15 @@ export const registerAPI = async (
         handleError(error);
     }
 };
+
+export const resetPasswordAPI = async (email: string, password: string) => {
+    try {
+        const data = await axios.post<UserProfileToken>(api + "account/reset-password", {
+            email: email,
+            newPassword: password,
+        });
+        return data;
+    } catch (error) {
+        handleError(error);
+    }
+}

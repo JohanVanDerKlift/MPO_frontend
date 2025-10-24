@@ -11,6 +11,7 @@ import Login from './components/Login';
 import ProductionorderList from "./pages/ProductionorderList/ProductionorderList";
 import Productionorder from "./pages/Productionorder/Productionorder";
 import Register from "./components/Register";
+import PasswordReset from "./components/PasswordReset";
 
 function App() {
     const {user} = useAuth();
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/productionorder/:id/:type" element={user ? <Productionorder /> : <Login />}/>
                     <Route path="/account/login" element={<Login />}/>
                     <Route path="/account/register" element={<Register />}/>
+                    <Route path="/account/reset-password" element={<PasswordReset />}/>
                 </Routes>
                 <ToastContainer position="bottom-left" autoClose={3000} />
             </Container>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPO_backend.Data;
@@ -21,12 +22,12 @@ public class SearchController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<ProductionOrderDto>>> SearchProductionorders([FromQuery] SearchParams searchParams)
     {
         var searchResult = _context.ProductionOrders
             .Include(x => x.ProductionOrderItems)
-            //.Include(x => x.QualityTests)
             .OrderByDescending(x => x.StartDate)
             .AsQueryable();
         
@@ -61,7 +62,7 @@ public class SearchController : ControllerBase
                 TestInstruction = item.ProdTestInstruction,
                 Photo = item.Photo,
                 StartDate = item.StartDate,
-                //QualityTests = _mapper.Map<List<QualityTestDto>>(item.QualityTests),
+                Status = item.Status,
                 ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(item.ProductionOrderItems)
             });
         }

@@ -28,6 +28,8 @@ export interface ProductionOrder {
     sHeight1: number,
     sHght1Unit: number,
     startDate: Date,
+    status: number,
+    isVariableProduct: boolean,
     qualityTests: QualityTest[],
     productionOrderItems: ProductionOrderItem[]
 }
@@ -40,6 +42,10 @@ export interface ProductionOrderItem {
     remark: string;
 }
 
+export interface ProductionProps {
+    id: string;
+}
+
 export interface QualityTest {
     mechanicalTest: boolean;
     visualTest: boolean;
@@ -47,6 +53,16 @@ export interface QualityTest {
     operationalTest: boolean;
     testResult: boolean;
     serialNo: number;
+}
+
+export interface UserContextType {
+    user: UserProfile | null;
+    token: string | null;
+    registerUser: (email: string, password: string, roles: string[]) => void;
+    loginUser: (email: string, password: string) => void;
+    logout: () => void;
+    isLoggedIn: () => boolean;
+    resetPasswordUser: (email: string, password: string) => void;
 }
 
 export interface UserProfileToken {
@@ -125,4 +141,21 @@ interface RegistrationData {
     email: string;
     password: string;
     roles: string[];
+}
+
+export interface RegisterFormInput {
+    email: string;
+    password: string;
+    role: string[];
+}
+
+export interface ResetPasswordFormInput {
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+export interface ResetPassword {
+    email: string;
+    password: string;
 }

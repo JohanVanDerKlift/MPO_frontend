@@ -4,10 +4,10 @@ import {Table} from "react-bootstrap";
 import './QualityTest.css';
 import {useForm} from "react-hook-form";
 import {QualityTestItem, QualityTestProps} from "../../types/Types";
-import {postData} from "../actions/GetData";
+import {postData} from "../actions/data";
 import {useAuth} from "../context/AuthContext";
 import CheckboxRow from "./CheckboxRow";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 function QualityTest({items, productionorderId}: QualityTestProps): JSX.Element {
     const initialStates = useMemo(() => getInitialStates(items), [items]);

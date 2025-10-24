@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPO_backend.Data;
@@ -20,6 +21,7 @@ public class QualityTestController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<QualityTestDto>>> GetQualityTests()
     {
@@ -27,6 +29,7 @@ public class QualityTestController : ControllerBase
         return Ok(_mapper.Map<List<QualityTestDto>>(result));
     }
 
+    [Authorize]
     [HttpPost("{id:guid}")]
     public async Task<ActionResult> UpsertQualityTest(Guid id, List<PostQualityTestDto> dtos)
     {
@@ -80,7 +83,7 @@ public class QualityTestController : ControllerBase
             
         return Ok();
     }
-    
+
     [HttpPost("serials")]
     public async Task<ActionResult> SyncSerials(List<SerialNumberDto> dtos)
     {

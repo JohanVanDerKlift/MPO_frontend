@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useForm, SubmitHandler} from "react-hook-form";
-import {postData} from "../actions/GetData";
+import {putData} from "../actions/data";
 import {toast} from "react-toastify";
 
 type MeasureProps = {
@@ -18,18 +18,27 @@ type MeasureProps = {
 };
 
 function Measure(props: MeasureProps) {
-    const {register, handleSubmit, reset} = useForm<MeasureProps>();
+    const {register, handleSubmit, reset} = useForm<MeasureProps>({
+        defaultValues: {
+            iWght1Unit: 3,
+            sWght1Unit: 3,
+        }
+    });
 
     useEffect(() => {
         if (props.iWeight1 !== undefined) {
-            reset(props)
+            reset({
+                ...props,
+                iWght1Unit: props.iWght1Unit === 0 ? 3 : props.iWght1Unit,
+                sWght1Unit: props.sWght1Unit === 0 ? 3 : props.sWght1Unit,
+            })
         }
         console.log(props)
     }, [props, reset])
 
     const handleFormSubmit: SubmitHandler<MeasureProps> = (data) => {
         console.log(data);
-        postData("productionorders", `/${props.id}`, data).then(() => {
+        putData("productionorders/measures", `/${props.id}`, data).then(() => {
             toast.success("Data saved successfully");
         }).catch((error) => {
             console.error("Save failed:", error);
@@ -46,6 +55,7 @@ function Measure(props: MeasureProps) {
                         id="iWeight1"
                         type="number"
                         className="form-control"
+                        step="any"
                         {...register("iWeight1", { required: true, valueAsNumber: true })}
                     />
                 </div>
@@ -69,6 +79,7 @@ function Measure(props: MeasureProps) {
                         id="SWeight1"
                         type="number"
                         className="form-control"
+                        step="any"
                         {...register("sWeight1", { required: true, valueAsNumber: true })}
                     />
                 </div>
@@ -92,6 +103,7 @@ function Measure(props: MeasureProps) {
                         id="SLength1"
                         type="number"
                         className="form-control"
+                        step="any"
                         {...register("sLength1", { required: true, valueAsNumber: true })}
                     />
                 </div>
@@ -108,6 +120,7 @@ function Measure(props: MeasureProps) {
                         id="SWidth1"
                         type="number"
                         className="form-control"
+                        step="any"
                         {...register("sWidth1", { required: true, valueAsNumber: true })}
                     />
                 </div>
@@ -124,6 +137,7 @@ function Measure(props: MeasureProps) {
                         id="SHeight1"
                         type="number"
                         className="form-control"
+                        step="any"
                         {...register("sHeight1", { required: true, valueAsNumber: true })}
                     />
                 </div>

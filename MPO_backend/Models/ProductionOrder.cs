@@ -28,6 +28,8 @@ public class ProductionOrder
     public int? SWdth1Unit { get; set; }
     public decimal? SHeight1 { get; set; }
     public int? SHght1Unit { get; set; }
+    public bool IsVariableProduct { get; set; }
+    public bool HasChanged { get; set; }
 
     public List<QualityTest> QualityTests { get; set; }
     public List<ProductionOrderItem> ProductionOrderItems { get; set; }

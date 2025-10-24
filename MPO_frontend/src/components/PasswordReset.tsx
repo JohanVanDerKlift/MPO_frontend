@@ -2,23 +2,24 @@ import React from 'react';
 import {useForm} from "react-hook-form"
 import {useAuth} from "../context/AuthContext";
 import Container from "react-bootstrap/Container";
-import {RegisterFormInput} from "../../types/Types";
+import {ResetPassword, ResetPasswordFormInput} from "../../types/Types";
 
 function Register() {
-    const {register, handleSubmit, formState: {errors}} = useForm<RegisterFormInput>();
-    const {registerUser} = useAuth();
+    const {register, handleSubmit, watch, formState: {errors}} = useForm<ResetPasswordFormInput>();
+    const {resetPasswordUser} = useAuth();
 
-    function handleFormSubmit(form: RegisterFormInput) {
-        registerUser(form.email, form.password, form.role);
+    function handleFormSubmit(form: ResetPassword) {
+        resetPasswordUser(form.email, form.password);
     }
 
     return (
         <Container className={"m-4"} fluid={true} style={{minHeight: "50vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <form className="login-form" onSubmit={handleSubmit(handleFormSubmit)}>
                 <div className="form-group mt-4">
-                    <label htmlFor="Email">Email address</label>
+                    <label htmlFor="Email">Email adres</label>
                     <input type="email"
                            className={`form-control mt-2 ${errors.email ? "is-invalid border-danger" : ""}`}
+                           id="Email"
                            aria-describedby="emailHelp"
                            placeholder="Enter email"
                            {...register("email", {
@@ -33,40 +34,34 @@ function Register() {
                     )}
                 </div>
                 <div className="form-group mt-4">
-                    <label htmlFor="Password">Password</label>
+                    <label htmlFor="Email">Password</label>
                     <input type="password"
                            className={`form-control mt-2 ${errors.password ? "is-invalid border-danger" : ""}`}
                            id="Password"
-                           placeholder="Password"
-                           {...register("password")}/>
+                           placeholder="Enter password"
+                           {...register("password", {required: "password is required"})}/>
                     {errors.password && (
                         <p className="text-danger mt-1">{errors.password.message}</p>
                     )}
                 </div>
                 <div className="form-group mt-4">
-                    <label htmlFor="Role">Role</label>
-                    <select
-                        id="Role"
-                        className={`form-control mt-2 ${errors.role ? "is-invalid border-danger" : ""}`}
-                        multiple={true}
-                        {...register("role", { required: "Please select at least one role"})}
-                        aria-invalid={errors.role ? "true" : "false"}
-                    >
-                        <option value="">Select a role</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Testing">Testing</option>
-                        <option value="Controller">Controller</option>
-                        <option value="Production">Production</option>
-                        <option value="Packing">Packing</option>
-                    </select>
-
-                    {errors.role && (
-                        <p className="text-danger mt-1">{errors.role.message}</p>
+                    <label htmlFor="ConfirmPassword">Confirm Password</label>
+                    <input type="password"
+                           className={`form-control mt-2 ${errors.confirmPassword ? "is-invalid border-danger" : ""}`}
+                           id="ConfirmPassword"
+                           placeholder="Confirm Password"
+                           {...register("confirmPassword", {
+                               required: "Please confirm your password",
+                               validate: value =>
+                                   value === watch("password") || "Password do not match"
+                           })}
+                    />
+                    {errors.confirmPassword && (
+                        <p className="text-danger mt-1">{errors.confirmPassword.message}</p>
                     )}
                 </div>
                 <div className="form-group mt-4">
-                    <button type="submit" className="btn btn-primary">Register new User</button>
+                    <button type="submit" className="btn btn-primary">Reset Password</button>
                 </div>
             </form>
         </Container>

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPO_backend.Data;
@@ -9,100 +8,20 @@ using MPO_backend.Models;
 namespace MPO_backend.Controllers;
 
 [ApiController]
-[Route("api/productionorders")]
-public class ProductionOrderController : ControllerBase
+[Route("api/sync")]
+public class SyncController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly IMapper  _mapper;
 
-    public ProductionOrderController(ApplicationDbContext context, IMapper mapper)
+    public SyncController(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
-    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<ProductionOrderListDto>>> GetAllProductionOrders()
-    {
-        var query = _context.ProductionOrders.OrderByDescending(o => o.StartDate)
-            .AsQueryable();
-        var result = await query.ToListAsync();
-        
-        // mapping
-        var mappedResult = new List<ProductionOrderListDto>();
-        foreach (var item in result)
-        {
-            mappedResult.Add(new ProductionOrderListDto()
-            {
-                Id = item.Id,
-                DocNum = item.DocNum,
-                ItemName = item.ProdItemName,
-                ItemCode = item.ProdItemCode,
-                Quantity = item.Quantity,
-                CardCode = item.CardCode,
-                CardName = item.CardName,
-                ProductionText = item.ProductionText,
-                StartDate = item.StartDate,
-                Status = item.Status,
-            });
-        }
-
-        return mappedResult;
-    }
-
-    [Authorize]
-    [HttpGet("{id:guid}")]
-    //[Authorize]
-    public async Task<ActionResult<ProductionOrderDto>> GetProductionOrderById(Guid id)
-    {
-        var productionOrder = await _context.ProductionOrders
-            .Include(x => x.ProductionOrderItems)
-            .Include(x => x.QualityTests)
-            .FirstOrDefaultAsync(x => x.Id == id);
-        
-        if (productionOrder == null) return NotFound();
-
-        var mappedResult = new ProductionOrderDto()
-        {
-            Id = productionOrder.Id,
-            DocNum = productionOrder.DocNum,
-            ItemName = productionOrder.ProdItemName,
-            ItemCode = productionOrder.ProdItemCode,
-            Quantity = productionOrder.Quantity,
-            CardCode = productionOrder.CardCode,
-            CardName = productionOrder.CardName,
-            Instruction = productionOrder.Instruction,
-            InstructionFile = productionOrder.InstructionFile,
-            WhsName = productionOrder.WhsName,
-            ProductionText = productionOrder.ProductionText,
-            Comment = productionOrder.Comment,
-            TestInstruction = productionOrder.ProdTestInstruction,
-            Photo = productionOrder.Photo,
-            Logo = productionOrder.Logo,
-            StartDate = productionOrder.StartDate,
-            IWeight1 = productionOrder.IWeight1 ?? 0,
-            IWght1Unit = productionOrder.IWght1Unit ?? 0,
-            SWeight1 = productionOrder.SWeight1 ?? 0,
-            SWdth1Unit = productionOrder.SWdth1Unit ?? 0,
-            SLength1 = productionOrder.SLength1 ?? 0,
-            SLen1Unit = productionOrder.SLen1Unit ?? 0,
-            SWidth1 = productionOrder.SWidth1 ?? 0,
-            SWght1Unit = productionOrder.SWght1Unit ?? 0,
-            SHeight1 = productionOrder.SHeight1 ?? 0,
-            SHght1Unit = productionOrder.SHght1Unit ?? 0,
-            Status = productionOrder.Status,
-            IsVariableProduct = productionOrder.IsVariableProduct,
-            
-            QualityTests = _mapper.Map<List<QualityTestDto>>(productionOrder.QualityTests),
-            ProductionOrderItems = _mapper.Map<List<ProductionOrderItemDto>>(productionOrder.ProductionOrderItems)
-        };
-        
-        return mappedResult;
-    }
-    
-    [HttpPost]
-    public async Task<ActionResult> PostProductionOrder([FromBody] List<CreateProductionOrderDto> productionOrderDtos)
+    public async Task<ActionResult> PostProductionOrders([FromBody] List<CreateProductionOrderDto> productionOrderDtos)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -212,48 +131,78 @@ public class ProductionOrderController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpPut("measures/{id:guid}")]
-    public async Task<IActionResult> PostMeasures(Guid id, [FromBody] PostMeasureDto dto)
+    [HttpGet("measures")]
+    public async Task<ActionResult<List<MeasureSyncDto>>> GetMeasures()
     {
-        var productionOrder = await _context.ProductionOrders.FindAsync(id);
-        if (productionOrder == null)
+        var measures = new List<MeasureSyncDto>();
+        var productionOrders = await _context.ProductionOrders
+            .Where(x => x.HasChanged).ToListAsync();
+        if (productionOrders.Any())
         {
-            return NotFound();
+            foreach (var order in productionOrders)
+            {
+                measures.Add(new MeasureSyncDto
+                {
+                    DocNum = order.DocNum,
+                    ProdItemCode = order.ProdItemCode,
+                    IWeight1 = order.IWeight1?? 0,
+                    IWght1Unit = order.IWght1Unit?? 0,
+                    SWeight1 = order.SWeight1?? 0,
+                    SWght1Unit = order.SWght1Unit?? 0,
+                    SLength1 = order.SLength1?? 0,
+                    SLen1Unit = order.SLen1Unit?? 0,
+                    SWidth1 = order.SWidth1?? 0,
+                    SWdth1Unit = order.SWdth1Unit?? 0,
+                    SHeight1 = order.SHeight1?? 0,
+                    SHght1Unit = order.SHght1Unit?? 0
+                });
+            }
         }
-        
-        productionOrder.IWeight1 = dto.IWeight1;
-        productionOrder.IWght1Unit = dto.IWght1Unit;
-        productionOrder.SWeight1 = dto.SWeight1;
-        productionOrder.SWght1Unit = dto.SWght1Unit;
-        productionOrder.SLength1 = dto.SLength1;
-        productionOrder.SLen1Unit = dto.SLen1Unit;
-        productionOrder.SWidth1 = dto.SWidth1;
-        productionOrder.SWdth1Unit = dto.SWdth1Unit;
-        productionOrder.SHeight1 = dto.SHeight1;
-        productionOrder.SHght1Unit = dto.SHght1Unit;
-        productionOrder.HasChanged = true;
-        await _context.SaveChangesAsync();
-        return Ok();
+        return Ok(measures);
     }
 
-    [Authorize]
-    [HttpPut("status/{id:guid}")]
-    public async Task<IActionResult> PutStatus(Guid id, [FromBody] Status status)
+    [HttpPost("measures")]
+    public async Task<ActionResult> SetHasChanged(long docNum)
     {
-        var productionOrder = await _context.ProductionOrders.FindAsync(id);
-        if (productionOrder == null)
+        var productionOrder = await _context.ProductionOrders
+            .Where(p => p.DocNum ==  docNum).FirstOrDefaultAsync();
+        if (productionOrder != null)
         {
-            return NotFound();
+            productionOrder.HasChanged = false;
+        }
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpGet("QualityTests")]
+    public async Task<ActionResult<List<QualityTestSyncDto>>> GetQualityTests()
+    {
+        var qualityTestDtos = new List<QualityTestSyncDto>();
+        var qualityTests = await _context.QualityTests
+            .Where(q => q.UpdatedAt > DateTime.Now.AddDays(-1)).ToListAsync();
+        if (qualityTests.Any())
+        {
+            foreach (var test in qualityTests)
+            {
+                var productionOrder = await _context.ProductionOrders.FindAsync(test.ProductionOrderId);
+                if (productionOrder != null)
+                    qualityTestDtos.Add(new QualityTestSyncDto
+                    {
+                        MechanicalTest = test.MechanicalTest,
+                        VisualTest = test.VisualTest,
+                        ElectricalTest = test.ElectricalTest,
+                        OperationalTest = test.OperationalTest,
+                        TestResult = test.TestResult,
+                        SerialNo = test.SerialNo,
+                        CreatedAt = test.CreatedAt,
+                        UpdatedAt = test.UpdatedAt,
+                        DocNum = productionOrder.DocNum,
+                    });
+            }
+            
+            return Ok(qualityTestDtos);
         }
         
-        if (!Enum.IsDefined(typeof(Status), status))
-        {
-            return BadRequest($"Invalid status value: {status}");
-        }
-
-        productionOrder.Status = status;
-        await _context.SaveChangesAsync();
-        return Ok();
+        return Ok(qualityTests);
     }
 }

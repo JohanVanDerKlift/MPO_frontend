@@ -13,7 +13,6 @@ function Login() {
     const {loginUser} = useAuth();
 
     function handleFormSubmit(form: LoginFormInput) {
-        console.log(loginUser);
         loginUser(form.email, form.password);
     }
 
@@ -22,22 +21,24 @@ function Login() {
             <form className="login-form" onSubmit={handleSubmit(handleFormSubmit)}>
                 <div className="form-group mt-4">
                     <label htmlFor="Email">Email address</label>
-                    <input type="email" className="form-control mt-2" id="Email" aria-describedby="emailHelp"
+                    <input type="email"
+                           className={`form-control mt-2 ${errors.email ? "is-invalid border-danger" : ""}`}
+                           id="Email"
+                           aria-describedby="emailHelp"
                            placeholder="Enter email" {...register("email")}/>
-                    {errors.email ? (
-                        <p className="text-white">{errors.email.message}</p>
-                    ) : (
-                        ""
+                    {errors.email && (
+                        <p className="text-danger mt-1">{errors.email.message}</p>
                     )}
                 </div>
                 <div className="form-group mt-4">
                     <label htmlFor="Password">Password</label>
-                    <input type="password" className="form-control mt-2" id="Password" placeholder="Password"
+                    <input type="password"
+                           className={`form-control mt-2 ${errors.password ? "is-invalid border-danger" : ""}`}
+                           id="Password"
+                           placeholder="Password"
                            {...register("password")}/>
-                    {errors.password ? (
-                        <p className="text-white">{errors.password.message}</p>
-                    ) : (
-                        ""
+                    {errors.password && (
+                        <p className="text-danger mt-1">{errors.password.message}</p>
                     )}
                 </div>
                 <div className="form-group mt-4">

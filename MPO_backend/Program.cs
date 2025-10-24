@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MPO_backend.Data;
+using MPO_backend.DTOs.Account;
 using MPO_backend.Interfaces;
 using MPO_backend.Models;
 using MPO_backend.Services;
@@ -29,7 +30,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
         options.SignIn.RequireConfirmedEmail = false;
         options.SignIn.RequireConfirmedPhoneNumber = false;
         options.User.RequireUniqueEmail = true;
+        options.Tokens.ProviderMap.Add("Default", new TokenProviderDescriptor(
+            typeof(DataProtectorTokenProvider<AppUser>)));
     })
+    .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthentication(options =>

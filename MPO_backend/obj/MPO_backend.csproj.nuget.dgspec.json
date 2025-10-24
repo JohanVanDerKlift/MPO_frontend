@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj": {}
+    "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj": {}
   },
   "projects": {
-    "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj": {
+    "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
+        "projectUniqueName": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
         "projectName": "MPO_backend",
-        "projectPath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
+        "projectPath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
         "packagesPath": "C:\\Users\\JohanVanDerKlift\\.nuget\\packages\\",
-        "outputPath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\obj\\",
+        "outputPath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -126,7 +126,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.2.25502.107/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

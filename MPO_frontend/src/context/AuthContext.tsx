@@ -1,18 +1,9 @@
 import React, {useEffect, createContext, useState, useContext} from 'react';
 import axios from "axios";
 import {toast} from "react-toastify";
-import {UserProfile} from "../../types/Types";
-import {loginAPI, registerAPI} from "../actions/AuthService";
+import {UserContextType, UserProfile} from "../../types/Types";
+import {loginAPI, registerAPI, resetPasswordAPI} from "../actions/AuthService";
 import {useNavigate} from "react-router-dom";
-
-type UserContextType = {
-    user: UserProfile | null;
-    token: string | null;
-    registerUser: (email: string, password: string, roles: string[]) => void;
-    loginUser: (email: string, password: string) => void;
-    logout: () => void;
-    isLoggedIn: () => boolean;
-};
 
 type Props = { children: React.ReactNode };
 
@@ -55,8 +46,8 @@ export const AuthContextProvider = ({children}: Props)=> {
                     toast.success("User registered successfully.");
                     navigate("/productionorders");
                 }
-            })
-            .catch((error) => toast.warning("Server error occurred"));
+            }
+        ).catch((error) => toast.warning("Server error occurred"));
     }
 
     const loginUser = async (
@@ -79,8 +70,23 @@ export const AuthContextProvider = ({children}: Props)=> {
                     toast.success("Login Success!");
                     navigate("/productionorders");
                 }
-            })
-            .catch((error) => toast.warning("Login failed"));
+            }
+        ).catch((error) => toast.warning("Login failed"));
+    }
+
+    const resetPasswordUser = async (
+        email: string,
+        password: string
+    ) => {
+        await resetPasswordAPI(email, password)
+            .then((result) => {
+                if (result) {
+                    console.log(result);
+                    toast.success("Password reset successfully.");
+                    navigate("/account/login");
+                }
+            }
+        ).catch((error) => toast.warning("Password reset failed"));
     }
 
     const isLoggedIn = () => {
@@ -96,7 +102,7 @@ export const AuthContextProvider = ({children}: Props)=> {
     };
 
     return (
-        <AuthContext.Provider value={{ loginUser, user, token, logout, isLoggedIn, registerUser}}>
+        <AuthContext.Provider value={{ loginUser, user, token, logout, isLoggedIn, registerUser, resetPasswordUser}}>
             {isReady ? children : null}
         </AuthContext.Provider>
     );

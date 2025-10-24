@@ -1,0 +1,30 @@
+.custom-progress {
+    height: 24px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Voorbeeld van aangepaste kleuren */
+.custom-progress.Ingepland .progress-bar {
+    background-color: #6c757d; /* grijs */
+}
+
+.custom-progress.Productie .progress-bar {
+    background-color: #EE2E23;
+}
+
+.custom-progress.Testen .progress-bar {
+    background-color: #ffc107; /* geel */
+}
+
+.custom-progress.Verzenden .progress-bar {
+    background-color: #007bff; /* blauw */
+}
+
+.custom-progress.Compleet .progress-bar {
+    background-color: #28a745; /* groen */
+}
+
+.custom-progress.Afgehandeld .progress-bar {
+    background-color: #11471e; /* groen */
+}

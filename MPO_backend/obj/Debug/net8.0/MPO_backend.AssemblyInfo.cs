@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MPO_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+742a0b5fec57b80705db96739a6cacd8dc6f594a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98b9a09d0cf64cb0e9fef55a254f2925e3157f73")]
 [assembly: System.Reflection.AssemblyProductAttribute("MPO_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MPO_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
