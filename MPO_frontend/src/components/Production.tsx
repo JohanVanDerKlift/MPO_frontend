@@ -21,8 +21,8 @@ enum Status {
 const statusPermissions: Record<string, string[]> = {
     Ingepland: ['Admin', 'Manager'],
     Productie: ['Admin', 'Manager', 'Production', 'Production'],
-    Testen: ['Admin', 'Manager', 'Testing', 'Production'],
-    Verzenden: ['Admin', 'Manager', 'Packing', 'Testing'],
+    Testen: ['Admin', 'Manager', 'Testing', 'Production', 'Controller'],
+    Verzenden: ['Admin', 'Manager', 'Packing', 'Testing', 'Controller'],
     Compleet: ['Admin', 'Manager', 'Packing'],
     Afgehandeld: ['Admin']
 };

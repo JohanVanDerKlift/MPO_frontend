@@ -13,15 +13,28 @@ function CheckboxRow({
 }) {
     const testResultValue = useWatch({ control, name: `testResult-${serial}` });
     const testTypes = ["mechanicalTest", "visualTest", "electricalTest", "operationalTest", "testResult"];
+    const otherTestValues = useWatch({
+        control,
+        name: [
+            `mechanicalTest-${serial}`,
+            `visualTest-${serial}`,
+            `electricalTest-${serial}`,
+            `operationalTest-${serial}`,
+        ],
+    });
+    const isTestResultDisabled =
+        !user?.roles.some((role: string) =>
+            ['Controller', 'Manager', 'Admin'].includes(role)
+        ) || otherTestValues?.some((val) => !val);
 
     return (
         <>
             {testTypes.map((type) => {
                 const id = `${type}-${serial}`;
                 const isDisabled =
-                    (type === 'testResult' && !user?.roles.some((role: string) =>
-                        ['Controller', 'Manager', 'Admin'].includes(role))) ||
-                    (type !== 'testResult' && testResultValue);
+                    type === 'testResult'
+                        ? isTestResultDisabled
+                        : !!testResultValue;
 
                 return (
                     <td className="text-center" key={id}>

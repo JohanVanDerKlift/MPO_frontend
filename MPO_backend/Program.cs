@@ -134,4 +134,8 @@ app.UseCors(x => x
     .SetIsOriginAllowed(origin => true)
 );
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
+
 app.Run();

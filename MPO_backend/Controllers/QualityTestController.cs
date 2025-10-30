@@ -100,6 +100,8 @@ public class QualityTestController : ControllerBase
                 if (qualityTest != null)
                 {
                     qualityTest.SerialNo = dto.SerialNo;
+                    qualityTest.CreatedAt = DateTime.Now;
+                    qualityTest.UpdatedAt = DateTime.Now;
                     await _context.QualityTests.AddAsync(qualityTest);
                 }
                 else if (productionOrder != null)
@@ -113,6 +115,7 @@ public class QualityTestController : ControllerBase
                         TestResult = false,
                         SerialNo = dto.SerialNo,
                         ProductionOrderId = productionOrder.Id,
+                        UpdatedAt = DateTime.Now
                     };
                     await _context.QualityTests.AddAsync(qualityTest);
                 }

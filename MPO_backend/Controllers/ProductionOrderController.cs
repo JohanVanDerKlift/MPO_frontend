@@ -53,7 +53,6 @@ public class ProductionOrderController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:guid}")]
-    //[Authorize]
     public async Task<ActionResult<ProductionOrderDto>> GetProductionOrderById(Guid id)
     {
         var productionOrder = await _context.ProductionOrders

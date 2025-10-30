@@ -20,7 +20,7 @@ public class SyncController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
+    [HttpPost("productionorders")]
     public async Task<ActionResult> PostProductionOrders([FromBody] List<CreateProductionOrderDto> productionOrderDtos)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
@@ -52,17 +52,19 @@ public class SyncController : ControllerBase
                     productionOrder.ProdTestInstruction = dto.ProdTestInstruction;
                     productionOrder.Photo = dto.Photo == "1";
                     productionOrder.Logo = dto.Logo;
-                    productionOrder.IWeight1 = dto.IWeight1 ?? 0;
-                    productionOrder.IWght1Unit = dto.IWght1Unit ?? 0;
-                    productionOrder.SWeight1 = dto.SWeight1 ?? 0;
-                    productionOrder.SWght1Unit = dto.SWght1Unit ?? 0;
-                    productionOrder.SLength1 = dto.SLength1 ?? 0;
-                    productionOrder.SLen1Unit = dto.SLen1Unit ?? 0;
-                    productionOrder.SWidth1 = dto.SWidth1 ?? 0;
-                    productionOrder.SWdth1Unit = dto.SWdth1Unit ?? 0;
-                    productionOrder.SHeight1 = dto.SHeight11 ?? 0;
-                    productionOrder.SHght1Unit = dto.SHght1Unit ?? 0;
-                    productionOrder.HasChanged = false;
+                    if (!productionOrder.HasChanged)
+                    {
+                        productionOrder.IWeight1 = dto.IWeight1 ?? 0;
+                        productionOrder.IWght1Unit = dto.IWght1Unit ?? 0;
+                        productionOrder.SWeight1 = dto.SWeight1 ?? 0;
+                        productionOrder.SWght1Unit = dto.SWght1Unit ?? 0;
+                        productionOrder.SLength1 = dto.SLength1 ?? 0;
+                        productionOrder.SLen1Unit = dto.SLen1Unit ?? 0;
+                        productionOrder.SWidth1 = dto.SWidth1 ?? 0;
+                        productionOrder.SWdth1Unit = dto.SWdth1Unit ?? 0;
+                        productionOrder.SHeight1 = dto.SHeight11 ?? 0;
+                        productionOrder.SHght1Unit = dto.SHght1Unit ?? 0;
+                    }
 
                     await _context.ProductionOrderItems
                         .Where(x => x.ProductionOrderId == productionOrder.Id)
@@ -101,6 +103,7 @@ public class SyncController : ControllerBase
                     };
 
                     _context.ProductionOrders.Add(productionOrder);
+                    await _context.SaveChangesAsync();
                 }
 
                 // Items toevoegen
@@ -117,7 +120,7 @@ public class SyncController : ControllerBase
                     })
                     .ToList();
 
-                _context.ProductionOrderItems.AddRange(items);
+                await _context.ProductionOrderItems.AddRangeAsync(items);
             }
 
             await _context.SaveChangesAsync();

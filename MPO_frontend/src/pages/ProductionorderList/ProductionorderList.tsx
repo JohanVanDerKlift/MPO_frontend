@@ -9,6 +9,7 @@ import {PagedResult, ProductionOrder} from "../../../types/Types";
 import AppPagination from "../../components/AppPagination";
 import {StatusBar} from "../../components/StatusBar";
 import {useAuth} from "../../context/AuthContext";
+import getAllowedStatuses from "../../actions/AllowedStatuses";
 
 function ProductionorderList() {
     const [data, setData] = useState<PagedResult<ProductionOrder>>();
@@ -36,6 +37,11 @@ function ProductionorderList() {
     function setPageNumber(pageNumber: number) {
         setParams({pageNumber})
     }
+
+    const allowedStatuses = getAllowedStatuses(user?.roles ?? []);
+    const filteredResults = data?.results.filter(order =>
+        allowedStatuses.includes(order.status)
+    );
 
     useEffect(() => {
         getData(endpoint, query).then((result) => {
@@ -66,7 +72,7 @@ function ProductionorderList() {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {data.results && data.results.map((item, index) => (
+                                {filteredResults && filteredResults.map((item, index) => (
                                     <tr key={item.id}>
                                         <td>{item.docNum}</td>
                                         <td>{item.itemCode}</td>

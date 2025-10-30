@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RToI8RCeZmk=",
+  "dgSpecHash": "RaLb7X2PDnk=",
   "success": true,
-  "projectFilePath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
+  "projectFilePath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\JohanVanDerKlift\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\JohanVanDerKlift\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
@@ -97,9 +97,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'PagedList 1.17.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
-      "projectPath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
+      "projectPath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
+      "filePath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
       "libraryId": "PagedList",
       "targetGraphs": [
         "net8.0"
@@ -109,9 +109,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'PagedList.Mvc 4.5.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
-      "projectPath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
+      "projectPath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\Development\\RiderProjects\\MPO\\mpo_backend\\MPO_backend.csproj",
+      "filePath": "D:\\Development\\RiderProjects\\MPO\\MPO_Backend\\MPO_backend.csproj",
       "libraryId": "PagedList.Mvc",
       "targetGraphs": [
         "net8.0"
